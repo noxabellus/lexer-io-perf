@@ -26,14 +26,14 @@ I_1i5U9TqOA7Jea7l1TvajwB4OuykRWtotUSGlFTwovHOKfaigrDC_R
 ```
 
 Variably repeating for 10k and 110k lines, respectively. A generic lexical analyzer is constructed using a single byte of lookahead:
-```rs
+```rust
 pub struct Lexer<I: Iterator<Item = u8>> {
 	inner: Peekable<I>
 }
 ```
 
 The lexer discards whitespace, and produces a simple token sum type:
-```rs
+```rust
 #[derive(Debug)]
 pub enum Token {
 	Identifier(String),
@@ -42,7 +42,7 @@ pub enum Token {
 ```
 
 Tokens are generated via an Iterator implementation:
-```rs
+```rust
 impl<I: Iterator<Item = u8>> Iterator for Lexer<I> {
 	type Item = Token;
 
@@ -103,7 +103,7 @@ For each kind of test, where necessary an intermediate iterator is constructed:
 
 This is simply a wrapper to convert an `io::Read` into an `Iterator`
 
-```rs
+```rust
 pub struct ByteReader<R: Read> {
 	inner: R
 }
@@ -134,7 +134,7 @@ impl<R: Read> Iterator for ByteReader<R> {
 
 This takes a reference to a mutable slice, and refills it with bytes on demand
 
-```rs
+```rust
 pub struct BufferedReader<'b, R: Read> {
 	inner: R,
 	buffer: &'b mut [u8],
@@ -183,7 +183,7 @@ impl<'b, R: Read> Iterator for BufferedReader<'b, R> {
 
 This calls `mmap` on a file to generate a simple memory mapped view of it, then simply increments the base pointer. This will work on Unix systems, but an alternative implementation would be required for Windows
 
-```rs
+```rust
 pub struct MMapReader<'f> {
 	base: *const u8,
 	len: usize,
